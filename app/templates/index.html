@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/add_contact" method="POST">
+    <div class="form-group row">
+        <h3>Formulario Cerveza</h3>
+    </div>
+    <div class="form-group row">
+        <label for="name" class="col-sm-2 col-form-label">Nombre Completo</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="name" name="fullName" placeholder="Nombre Completo" required>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="country" class="col-sm-2 col-form-label">Pais</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" id="country" name="country" placeholder="Pais" required>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="yearsOld" class="col-sm-2 col-form-label">Edad</label>
+        <div class="col-sm-2">
+            <input type="number" class="form-control" id="yearsOld" name="yearsOld" placeholder="Edad" min="0" required>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="gender" class="col-sm-2 col-form-label">Genero</label>
+        <div class="col-sm-3">
+            <select id="gender" class="form-control" name="gender" required>
+                <option selected>Seleccione...</option>
+                <option value="0">Femenino</option>
+                <option value="1">Masculino</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="typeBeer" class="col-sm-2 col-form-label">Tipo de Cerveza</label>
+        <div class="col-sm-3"> 
+            <select id="typeBeer" class="form-control" name="typeBeer" required>
+                <option selected>Seleccione...</option>
+                <option value="Light">Light</option>
+                <option value="Oscura">Oscura</option>
+                <option value="Michelada">Michelada</option>
+                <option value="Malta saborizada">Malta saborizada</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="lupulo" class="col-sm-2 col-form-label">Lupulo</label>
+        <div class="input-group col-sm-3">
+            <select id="typeBeer" class="form-control" name="lupulo" required>
+                <option selected>Seleccione...</option>
+                <option value="0.04-0.063">4% - 6.3% (Sabor)</option>
+                <option value="0.08-0.09">8% - 9% (Sabor, aroma)</option>
+                <option value="0.135-0.16">13.5% - 16% (Amargar)</option>
+                <option value="0.15-0.21">15% - 21% (Aroma cítrico)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="alcohol" class="col-sm-2 col-form-label">%Alcohol</label>
+        <div class="input-group col-sm-3">
+            <select id="typeBeer" class="form-control" name="alcohol" required>
+                <option selected>Seleccione...</option>
+                <option value="0.03">3%</option>
+                <option value="0.04">4%</option>
+                <option value="0.05">5%</option>
+                <option value="0.06">6%</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row col-sm-3">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-dark">Guardar</button>
+        </div>
+      </div>
+</form>
+{% endblock %}

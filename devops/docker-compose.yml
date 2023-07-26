@@ -1,0 +1,88 @@
+version: '3.5'
+
+services:
+  mariadb-master:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3308:3306'
+    volumes:
+      - 'mariadb_master_data:/bitnami/mariadb'
+    environment:
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASS}
+      - MARIADB_DATABASE=${DB_NAME}
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=rootAPP
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+  mariadb-slave:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '3306'
+    depends_on:
+      - mariadb-master
+    environment:
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_USER=slave_user
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_MASTER_HOST=mariadb-master
+      - MARIADB_MASTER_PORT_NUMBER=3308
+      - MARIADB_MASTER_ROOT_PASSWORD=rootAPP
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+  app:
+    build:
+      context: ..
+      dockerfile: ./devops/service.Dockerfile
+    image: sass/beer-app
+    environment:
+      - "DB_HOST=mariadb-master"
+      - "DB_USER=root"
+      - "DB_PASSWORD=rootAPP"
+      - "DB_NAME=beers_apps"
+      - "APP_ALIAS_HOST=app1"
+    ports:
+      - "82:80"
+    hostname: app
+    depends_on:
+      - mariadb-master
+  app2:
+    build:
+      context: ..
+      dockerfile: ./devops/service.Dockerfile
+    image: sass/beer-app
+    environment:
+      - "DB_HOST=mariadb-master"
+      - "DB_USER=root"
+      - "DB_PASSWORD=rootAPP"
+      - "DB_NAME=beers_apps"
+      - "APP_ALIAS_HOST=app2"
+    ports:
+      - "83:80"
+    hostname: app2
+    depends_on:
+      - mariadb-master
+  balancer:
+    build:
+      context : ..
+      dockerfile: ./devops/nginx.Dockerfile
+    image: nginx:latest
+    ports:
+    - "80:80"
+    depends_on:
+      - app
+volumes:
+  mariadb_master_data:
+    driver: local

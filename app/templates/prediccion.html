@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>      
+
+    
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/predict" method="POST">
+    <br>    
+        <h3>Predicción de Cerveza Artesanal</h3>
+    </br>
+
+    <br>
+        <label for="edad">Edad: 
+        </label>
+        <input type="text" name="edad" placeholder="Edad"> 
+    </br>
+
+    <br>
+        <label for="genero">Género: 
+        </label>
+        <select name="genero" id="genero" style="height:35px">
+            <option value="">Seleccione...</option>
+            <option value="0">Femenino</option>
+            <option value="1">Masculino</option>
+        </select> 
+    </br>
+
+    </br> 
+        <label for="lupulo">¿Qué porcentaje de lúpulo le gustaría?
+        <input type="text" name="lupulo" placeholder= "Ingrese % lupulo">  
+        </label>    
+    </br>
+
+    <br>
+        <label for="alcohol">¿Cuánto porcentaje de alcohol?
+        </label>
+        <select name="alcohol" id="alcohol" style="height:35px">
+            <option value="">Seleccione...</option>
+            <option value="0.03">3% </option>
+            <option value="0.04">4% </option>   
+            <option value="0.05">5% </option> 
+            <option value="0.06">6% </option>      
+        </select> 
+    </br>      
+    
+
+    <br>
+        <div align="center">
+            <input type="submit" value="Predecir" class="btn btn-dark" style="display: block; margin: 0 auto;">
+        </div>
+    </br>
+
+</form>
+
+
+{% endblock %}
